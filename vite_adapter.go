@@ -2,9 +2,9 @@ package govite
 
 import (
 	"encoding/json"
-	"fmt"
 	viteManifest "github.com/aquaswim/govite/vite_manifest"
 	"io/fs"
+	"log"
 	"os"
 	"path"
 )
@@ -31,28 +31,28 @@ func NewWithFS(cfg *Config, fs fs.FS) *ViteAdapter {
 	devManifest, err := fs.Open(path.Join(cfg.ViteOutputPath, "manifest.dev.json"))
 	if err == nil {
 		defer devManifest.Close()
-		fmt.Println("Vite Dev Mode")
+		log.Println("Vite Dev Mode")
 		adapter.isDevelopment = true
 		// get the manifest
 		adapter.manifest = &viteManifest.Dev{}
 		err := json.NewDecoder(devManifest).Decode(adapter.manifest)
 		if err != nil {
-			panic(err)
+			log.Panicf("error reading vite dev manifest, error: %s", err)
 		}
 		return &adapter
 	}
 
 	prodManifest, err := fs.Open(path.Join(cfg.ViteOutputPath, ".vite", "manifest.json"))
 	if err != nil {
-		panic("Manifest file not found!")
+		log.Panicf("Manifest file not found!")
 	}
 	defer prodManifest.Close()
-	fmt.Println("Vite Prod Mode")
+	log.Println("Vite Prod Mode")
 	// get the manifest
 	adapter.manifest = &viteManifest.Prod{}
 	err = json.NewDecoder(prodManifest).Decode(adapter.manifest)
 	if err != nil {
-		panic(err)
+		log.Panicf("error reading vite prod manifest: %s", err)
 	}
 
 	return &adapter
@@ -61,10 +61,10 @@ func NewWithFS(cfg *Config, fs fs.FS) *ViteAdapter {
 func mustValidateOutputDir(path string) {
 	stat, err := os.Stat(path)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 	if !stat.IsDir() {
-		panic(fmt.Sprintf("%s is not valid directory", path))
+		log.Panicf("%s is not valid directory", path)
 	}
 }
 
@@ -79,7 +79,7 @@ func (v *ViteAdapter) GetBuilder() (VitePageAssetsBuilder, error) {
 func (v *ViteAdapter) MustGetBuilder() VitePageAssetsBuilder {
 	builder, err := v.GetBuilder()
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	return builder
 }

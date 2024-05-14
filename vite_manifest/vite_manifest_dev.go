@@ -1,5 +1,7 @@
 package vite_manifest
 
+import "log"
+
 type Dev struct {
 	Url    string            `json:"url"`
 	Inputs map[string]string `json:"inputs"`
@@ -10,5 +12,6 @@ func (d Dev) GetViteServerUrl() (string, error) {
 }
 
 func (d Dev) Resolve(_ string) *Chunk {
-	panic("dev manifest cannot be resolved")
+	log.Panicf("dev manifest cannot be resolved")
+	return nil
 }

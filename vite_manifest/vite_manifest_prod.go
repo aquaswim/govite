@@ -1,9 +1,12 @@
 package vite_manifest
 
+import "log"
+
 type Prod map[string]Chunk
 
 func (p Prod) GetViteServerUrl() (string, error) {
-	panic("Prod manifest don't have server url")
+	log.Panicln("Prod manifest don't have server url")
+	return "", nil
 }
 
 func (p Prod) Resolve(name string) *Chunk {
