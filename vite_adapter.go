@@ -5,7 +5,6 @@ import (
 	viteManifest "github.com/aquaswim/govite/vite_manifest"
 	"io/fs"
 	"log"
-	"os"
 	"path"
 )
 
@@ -26,7 +25,7 @@ func NewWithFS(cfg *Config, fs fs.FS) *ViteAdapter {
 		fs:  fs,
 	}
 	// validate vite output dir
-	mustValidateOutputDir(cfg.ViteOutputPath)
+	mustValidateOutputDir(fs, path.Clean(cfg.ViteOutputPath))
 	// determine mode
 	devManifest, err := fs.Open(path.Join(cfg.ViteOutputPath, "manifest.dev.json"))
 	if err == nil {
@@ -58,8 +57,13 @@ func NewWithFS(cfg *Config, fs fs.FS) *ViteAdapter {
 	return &adapter
 }
 
-func mustValidateOutputDir(path string) {
-	stat, err := os.Stat(path)
+func mustValidateOutputDir(fs fs.FS, path string) {
+	file, err := fs.Open(path)
+	if err != nil {
+		log.Panicln(err)
+	}
+	defer file.Close()
+	stat, err := file.Stat()
 	if err != nil {
 		log.Panicln(err)
 	}
