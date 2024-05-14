@@ -1,17 +1,21 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"github.com/aquaswim/govite"
 	"log"
 	"net/http"
 )
 
+//go:embed dist/*
+var dist embed.FS
+
 func main() {
-	vite := govite.New(&govite.Config{
+	vite := govite.NewWithFS(&govite.Config{
 		ViteOutputPath: "./dist",
 		AssetBaseUrl:   "/assets",
-	})
+	}, dist)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/home", func(w http.ResponseWriter, r *http.Request) {

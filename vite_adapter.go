@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	viteManifest "github.com/aquaswim/govite/vite_manifest"
+	"io/fs"
 	"os"
 	"path"
 )
@@ -12,16 +13,22 @@ type ViteAdapter struct {
 	cfg           *Config
 	isDevelopment bool
 	manifest      viteManifest.T
+	fs            fs.FS
 }
 
 func New(cfg *Config) *ViteAdapter {
+	return NewWithFS(cfg, defaultFs)
+}
+
+func NewWithFS(cfg *Config, fs fs.FS) *ViteAdapter {
 	adapter := ViteAdapter{
 		cfg: cfg,
+		fs:  fs,
 	}
 	// validate vite output dir
 	mustValidateOutputDir(cfg.ViteOutputPath)
 	// determine mode
-	devManifest, err := os.Open(path.Join(cfg.ViteOutputPath, "manifest.dev.json"))
+	devManifest, err := fs.Open(path.Join(cfg.ViteOutputPath, "manifest.dev.json"))
 	if err == nil {
 		defer devManifest.Close()
 		fmt.Println("Vite Dev Mode")
@@ -35,7 +42,7 @@ func New(cfg *Config) *ViteAdapter {
 		return &adapter
 	}
 
-	prodManifest, err := os.Open(path.Join(cfg.ViteOutputPath, ".vite", "manifest.json"))
+	prodManifest, err := fs.Open(path.Join(cfg.ViteOutputPath, ".vite", "manifest.json"))
 	if err != nil {
 		panic("Manifest file not found!")
 	}

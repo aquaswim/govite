@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="example: simple vite project" type="GoApplicationRunConfiguration" factoryName="Go Application">
+  <configuration default="false" name="example: simple vite project (embed)" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="go-vite" />
     <working_directory value="$PROJECT_DIR$/example/simple-vite-project" />
     <kind value="FILE" />
     <package value="github.com/aquaswim/govite/example/simple-vite-project" />
     <directory value="$PROJECT_DIR$" />
-    <filePath value="$PROJECT_DIR$/example/simple-vite-project/server.go" />
+    <filePath value="$PROJECT_DIR$/example/simple-vite-project/server_embed.go" />
     <method v="2" />
   </configuration>
 </component>
