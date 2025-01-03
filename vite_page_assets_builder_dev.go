@@ -7,13 +7,15 @@ import (
 
 type vitePageAssetsDev struct {
 	*viteManifest.Dev
-	input []string
+	input   []string
+	isReact bool
 }
 
-func newVitePageAssetDev(manifest *viteManifest.Dev) VitePageAssetsBuilder {
+func newVitePageAssetDev(manifest *viteManifest.Dev, isReact bool) VitePageAssetsBuilder {
 	return &vitePageAssetsDev{
-		Dev:   manifest,
-		input: []string{},
+		Dev:     manifest,
+		input:   []string{},
+		isReact: isReact,
 	}
 }
 
@@ -33,6 +35,16 @@ func (v *vitePageAssetsDev) CreateStyleTags() string {
 
 func (v *vitePageAssetsDev) CreateScriptTags() string {
 	out := "<!-- Vite Development -->"
+	if v.isReact {
+		// add react render hook
+		out += `<script type="module">
+  import RefreshRuntime from '` + v.Url + `@react-refresh'
+  RefreshRuntime.injectIntoGlobalHook(window)
+  window.$RefreshReg$ = () => {}
+  window.$RefreshSig$ = () => (type) => type
+  window.__vite_plugin_react_preamble_installed__ = true
+</script>`
+	}
 	out += fmt.Sprintf(`<script type="module" src="%s@vite/client"></script>`, v.Url)
 	for _, script := range v.input {
 		out += fmt.Sprintf(`<script type="module" src="%s%s"></script>`, v.Url, script)

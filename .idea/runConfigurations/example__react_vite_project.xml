@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="example: react vite project" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="go-vite" />
+    <working_directory value="$PROJECT_DIR$/example/react-vite-project" />
+    <kind value="FILE" />
+    <package value="github.com/aquaswim/govite/example/react-vite-project" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/example/react-vite-project/server.go" />
+    <method v="2" />
+  </configuration>
+</component>

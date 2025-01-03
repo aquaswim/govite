@@ -74,7 +74,7 @@ func mustValidateOutputDir(fs fs.FS, path string) {
 
 func (v *ViteAdapter) GetBuilder() (VitePageAssetsBuilder, error) {
 	if v.isDevelopment {
-		return newVitePageAssetDev(v.manifest.(*viteManifest.Dev)), nil
+		return newVitePageAssetDev(v.manifest.(*viteManifest.Dev), v.cfg.IsReact), nil
 	}
 
 	return newVitePageAssetProd(v.manifest), nil
